@@ -33,17 +33,13 @@ function randerData(data) {
   showList.innerHTML = str;
 }
 //設定種類
-let type = "all";
+let type = "";
 const navbt = document.querySelector(".button-group");
 navbt.addEventListener("click", (e) => {
-  if (type !== e.target.dataset.type) {
-    if (e.target.nodeName == "BUTTON") {
-      type = e.target.dataset.type;
-    }
-  } else if (type === e.target.dataset.type) {
-    type = "all";
+  if (e.target.nodeName == "BUTTON") {
+    type = e.target.dataset.type;
   }
-
+  console.log(type);
   updateData();
   search();
 });
@@ -51,7 +47,7 @@ navbt.addEventListener("click", (e) => {
 //切換頁面active
 $(".button-group button").click(function (e) {
   $(this).siblings().removeClass("active");
-  $(this).toggleClass("active");
+  $(this).addClass("active");
 });
 
 //切換資料庫更新
@@ -63,6 +59,8 @@ function updateData() {
     newData = data.filter((item) => item["種類代碼"] === "N05");
   } else if (type == "N06") {
     newData = data.filter((item) => item["種類代碼"] === "N06");
+  } else if (type == "all") {
+    newData = data;
   }
 
   randerData(newData);
@@ -77,7 +75,7 @@ function search() {
   let searchText = `查看 「${cropInput.value}」的查詢結果`;
   cropName.textContent = searchText;
 
-  if (type === "all") {
+  if (type === "all" || type === "") {
     newData = data.filter((item) => item["作物名稱"].match(cropInput.value));
   } else if (type === "N04" || type == "N05" || type == "N06") {
     newData = newData.filter((item) => item["作物名稱"].match(cropInput.value));
@@ -119,36 +117,56 @@ sortSelect.addEventListener("change", (e) => {
 //排序
 const sortAdvanced = document.querySelector(".js-sort-advanced");
 
+let sortPrice = ""; //價格種類
+let sortType = ""; //大到小 或 小到大
 sortAdvanced.addEventListener("click", (e) => {
-  if (e.target.nodeName == "I") {
-    let SortType = e.target.dataset.price;
+  //先搜尋後排序
+  if (type == "") {
+    alert("請先搜尋!");
+    return;
+  }
 
-    if (type == "all") {
-      if (e.target.dataset.sort === "up") {
-        newData = data.sort((a, b) => {
-          return b[SortType] - a[SortType];
-        });
-      } else {
-        newData = data.sort((a, b) => {
-          return a[SortType] - b[SortType];
-        });
-      }
+  //排序function
+  function sorted() {
+    if (sortType === "up") {
+      newData = newData.sort((a, b) => {
+        return b[sortPrice] - a[sortPrice];
+      });
     } else {
-      if (e.target.dataset.sort === "up") {
-        newData = newData.sort((a, b) => {
-          return b[SortType] - a[SortType];
-        });
+      newData = newData.sort((a, b) => {
+        return a[sortPrice] - b[sortPrice];
+      });
+    }
+  }
+
+  const faActive = document.querySelector(".fa-active");
+  //點擊字體有反應
+  if (e.target.nodeName == "DIV") {
+    if (sortPrice == e.target.textContent.trim()) {
+      if (sortType == "up") {
+        sortType = "down";
       } else {
-        newData = newData.sort((a, b) => {
-          return a[SortType] - b[SortType];
-        });
+        sortType = "up";
       }
     }
-
-    let sorttext = `依${SortType}排序`;
-    sortSelect.value = sorttext;
-    randerData(newData);
+    // sortPrice = e.target.textContent.trim();
+    else {
+      sortPrice = e.target.textContent.trim();
+      sortType = "up";
+    }
   }
+
+  //點擊上下符號有反應
+  else if (e.target.nodeName == "I") {
+    sortPrice = e.target.dataset.price;
+    sortType = e.target.dataset.sort;
+  }
+
+  sorted();
+
+  let sorttext = `依${sortPrice}排序`;
+  sortSelect.value = sorttext;
+  randerData(newData);
 });
 
 //自動搜尋
