@@ -39,7 +39,6 @@ navbt.addEventListener("click", (e) => {
   if (e.target.nodeName == "BUTTON") {
     type = e.target.dataset.type;
   }
-  console.log(type);
   updateData();
   search();
 });
@@ -63,6 +62,7 @@ function updateData() {
     newData = data;
   }
 
+  sortSelect.value = "排序篩選";
   randerData(newData);
 }
 
@@ -103,20 +103,8 @@ searchbt.addEventListener("click", () => {
   search();
 });
 
-//option 大到小排序
-const sortSelect = document.querySelector(".sort-select");
-sortSelect.addEventListener("change", (e) => {
-  let SortType = e.target.selectedOptions[0].dataset.price;
-
-  newData = newData.sort((a, b) => {
-    return b[SortType] - a[SortType];
-  });
-  randerData(newData);
-});
-
 //排序
 const sortAdvanced = document.querySelector(".js-sort-advanced");
-
 let sortPrice = ""; //價格種類
 let sortType = ""; //大到小 或 小到大
 sortAdvanced.addEventListener("click", (e) => {
@@ -140,24 +128,30 @@ sortAdvanced.addEventListener("click", (e) => {
   }
 
   const faActive = document.querySelector(".fa-active");
+
+  if (faActive !== null) {
+    faActive.classList.remove("fa-active");
+  }
   //點擊字體有反應
   if (e.target.nodeName == "DIV") {
     if (sortPrice == e.target.textContent.trim()) {
       if (sortType == "up") {
         sortType = "down";
+        e.target.children[0].children[1].classList.add("fa-active");
       } else {
+        e.target.children[0].children[0].classList.add("fa-active");
         sortType = "up";
       }
-    }
-    // sortPrice = e.target.textContent.trim();
-    else {
+    } else {
+      e.target.children[0].children[0].classList.add("fa-active");
       sortPrice = e.target.textContent.trim();
       sortType = "up";
     }
   }
-
   //點擊上下符號有反應
   else if (e.target.nodeName == "I") {
+    e.target.classList.add("fa-active");
+
     sortPrice = e.target.dataset.price;
     sortType = e.target.dataset.sort;
   }
@@ -166,6 +160,20 @@ sortAdvanced.addEventListener("click", (e) => {
 
   let sorttext = `依${sortPrice}排序`;
   sortSelect.value = sorttext;
+  randerData(newData);
+});
+
+//option 大到小排序
+const sortSelect = document.querySelector(".sort-select");
+sortSelect.addEventListener("change", (e) => {
+  if (type == "") {
+    return;
+  }
+
+  sortPrice = e.target.selectedOptions[0].dataset.price;
+  newData = newData.sort((a, b) => {
+    return b[sortPrice] - a[sortPrice];
+  });
   randerData(newData);
 });
 
