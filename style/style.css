@@ -1,0 +1,196 @@
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.inline-flex {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+body {
+  background: url(https://hexschool.github.io/js-filter/assets/bg.jpg);
+  background-size: cover;
+  height: 100vh;
+  font-family: "NotoSansCJKtc-Bold";
+  color: #2a2a2a;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.logo a {
+  display: block;
+  background: url(https://firebasestorage.googleapis.com/v0/b/hexschool-courses.appspot.com/o/course%2FJS%20%E5%89%8D%E7%AB%AF%E4%BF%AE%E7%B7%B4%E5%85%A8%E6%94%BB%E7%95%A5%2F1628942714013-logo%20%E6%94%B9.png?alt=media&token=583e78ed-6a6c-4660-9f0e-2f59f8eb78e2) no-repeat;
+  width: 450px;
+  height: 105px;
+  text-indent: 101%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .logo a {
+    background: url(https://firebasestorage.googleapis.com/v0/b/hexschool-courses.appspot.com/o/course%2FJS%20%E5%89%8D%E7%AB%AF%E4%BF%AE%E7%B7%B4%E5%85%A8%E6%94%BB%E7%95%A5%2F1629001163643-logo-sm.png?alt=media&token=914f40fc-c143-4aaa-a1c3-fb0bdd17fa9c) no-repeat;
+    width: 178px;
+    height: 50px;
+    margin: 1.25rem auto;
+  }
+}
+
+.main {
+  background: #fff;
+  border: 5px solid #fff8d45a;
+  padding: 2.5rem;
+}
+
+@media (max-width: 767px) {
+  .main {
+    padding: 0.75rem;
+  }
+}
+
+.btn-type {
+  padding: 0.5rem 2.5rem;
+  color: #2a2a2a;
+  letter-spacing: 1px;
+  margin: 0 0.625rem 1.25rem 0;
+}
+
+.btn-type:hover,
+.btn-type:active {
+  background: #f8d45a;
+}
+
+@media (max-width: 767px) {
+  .btn-type {
+    padding: 0.5rem 2.25rem;
+    margin: 0 0.375rem 1rem 0;
+  }
+}
+
+.active {
+  background: #f8d45a;
+}
+
+.seach-group {
+  white-space: nowrap;
+  margin-bottom: 2.5rem;
+  width: 100%;
+}
+
+.date-input,
+.crop-input {
+  width: 40.625%;
+}
+
+.date-input label,
+.crop-input label {
+  background: #899e39;
+  padding: 0.5rem 1rem;
+  width: 27.5%;
+}
+
+.date-input input,
+.crop-input input {
+  width: 80%;
+  border: 2px #899e39 solid;
+  padding: 0.375rem;
+  margin-left: -0.3125rem;
+}
+
+.search {
+  width: 16.39%;
+  background: #899e39;
+  padding: 0.5rem 3.375rem;
+}
+
+@media (max-width: 767px) {
+  .seach-group {
+    margin-bottom: 1.5rem;
+  }
+  .date-input,
+  .crop-input {
+    width: 100%;
+  }
+  .search {
+    width: 100%;
+  }
+}
+
+.sort-select {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sort-down" class="svg-inline--fa fa-sort-down fa-w-2" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="10 0 320 900"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41z"></path></svg>') no-repeat;
+  background-position: 105px 5px;
+}
+
+.show-result {
+  font-size: 18px;
+  letter-spacing: 1.12px;
+}
+
+.sort-content {
+  margin-bottom: 1.25rem;
+}
+
+.market thead {
+  background: #f4f1ea;
+  border-top: 2px solid #2a2a2a;
+  border-bottom: 2px solid #2a2a2a;
+}
+
+.market tbody {
+  border-bottom: 2px solid #d9d9d9;
+}
+
+@media (max-width: 480px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 767px) {
+  .mobile-select {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: url('data:image/svg+xml;utf8,<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sort-down" class="svg-inline--fa fa-sort-down fa-w-2" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="10 0 320 800"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41z"></path></svg>') no-repeat;
+    background-position: 60px 3px;
+  }
+}
+
+.sort-advanced {
+  position: relative;
+}
+
+.fa-caret-up,
+.fa-caret-down {
+  position: absolute;
+}
+
+.fa-caret-up {
+  top: -2px;
+  right: -15px;
+}
+
+.fa-caret-down {
+  top: 9px;
+  right: -15px;
+}
+/*# sourceMappingURL=style.css.map */
