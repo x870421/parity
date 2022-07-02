@@ -189,9 +189,12 @@ sortSelect.addEventListener("change", (e) => {
   randerData(newData);
 });
 
-//自動搜尋
-cropInput.addEventListener("keyup", (e) => {
-  search();
+//自動搜尋 (keyup電腦打字搜尋,enter手機換行搜尋)
+
+["keyup", "enter"].forEach((item) => {
+  cropInput.addEventListener(item, (e) => {
+    search();
+  });
 });
 
 //page
