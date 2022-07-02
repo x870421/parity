@@ -22,8 +22,8 @@ function randerData(data) {
   let str = "";
   data.forEach((value, index) => {
     str += `
-      <tr> <td> ${value["作物名稱"]} </td>
-        <td>${value["市場名稱"]}</td>
+      <tr> <td class="fw-bold"> ${value["作物名稱"]} </td>
+        <td class="fw-bold">${value["市場名稱"]}</td>
         <td>${value["上價"]}</td>
         <td>${value["中價"]}</td>
         <td>${value["下價"]}</td>
@@ -31,13 +31,21 @@ function randerData(data) {
         <td>${value["交易量"]}</td> </tr>`;
   });
   showList.innerHTML = str;
+
+  goPage(1, setPageSize);
 }
 //設定種類
 let type = "";
 const navbt = document.querySelector(".button-group");
+
 navbt.addEventListener("click", (e) => {
   if (e.target.nodeName == "BUTTON") {
     type = e.target.dataset.type;
+  }
+
+  const faActive = document.querySelector(".fa-active");
+  if (faActive !== null) {
+    faActive.classList.remove("fa-active");
   }
   updateData();
   search();
@@ -104,7 +112,7 @@ searchbt.addEventListener("click", () => {
 });
 
 //排序
-const sortAdvanced = document.querySelector(".js-sort-advanced");
+const sortAdvanced = document.querySelector(".js-sort-advanced ");
 let sortPrice = ""; //價格種類
 let sortType = ""; //大到小 或 小到大
 sortAdvanced.addEventListener("click", (e) => {
@@ -114,7 +122,12 @@ sortAdvanced.addEventListener("click", (e) => {
     return;
   }
 
+  if (e.target.nodeName == "TH") {
+    return;
+  }
+
   //排序function
+
   function sorted() {
     if (sortType === "up") {
       newData = newData.sort((a, b) => {
@@ -128,7 +141,6 @@ sortAdvanced.addEventListener("click", (e) => {
   }
 
   const faActive = document.querySelector(".fa-active");
-
   if (faActive !== null) {
     faActive.classList.remove("fa-active");
   }
@@ -138,7 +150,7 @@ sortAdvanced.addEventListener("click", (e) => {
       if (sortType == "up") {
         sortType = "down";
         e.target.children[0].children[1].classList.add("fa-active");
-      } else {
+      } else if (sortType == "down") {
         e.target.children[0].children[0].classList.add("fa-active");
         sortType = "up";
       }
@@ -181,3 +193,134 @@ sortSelect.addEventListener("change", (e) => {
 cropInput.addEventListener("keyup", (e) => {
   search();
 });
+
+//page
+
+const setPageSize = 20; //設定每頁顯示幾筆
+
+$(function () {
+  /*----產生data-th-----*/
+  let $table = $(".table_change");
+  let $thRows = $table.find("thead th");
+
+  $thRows.each(function (key, thRow) {
+    $table
+      .find("tbody tr td:nth-child(" + (key + 1) + ")")
+      .attr("data-th", $(thRow).text());
+  });
+  /*-----------*/
+  goPage(1, setPageSize); // 一開始先秀第一頁,以及每一頁最多兩筆資料
+});
+
+function goPage(currentPage, pageSize) {
+  var tr = $(".table_change tbody tr");
+  var num = $(".table_change tbody tr").length; //表格所有行數(所有記錄數)
+  var totalPage = Math.ceil(num / pageSize); // 表格所有行數/每頁顯示行數 = 總頁數
+
+  var startRow = (currentPage - 1) * pageSize + 1; //開始顯示的行
+  var endRow = currentPage * pageSize; //結束顯示的行
+  endRow = endRow > num ? num : endRow;
+
+  //遍歷顯示資料實現分頁
+  for (var i = 1; i < num + 1; i++) {
+    var trRow = tr[i - 1];
+    if (i >= startRow && i <= endRow) {
+      trRow.style.display = "";
+    } else {
+      trRow.style.display = "none";
+    }
+  }
+
+  //bootstrap分頁
+
+  currentPage = parseInt(currentPage);
+  const pagination = document.querySelector(".pagination");
+  //上一頁的標籤
+
+  let pagestr = "";
+  if (currentPage == 1) {
+    pagestr += `<li class="page-item">
+    <a class="page-link" aria-label="Previous" >
+      <span aria-hidden="true" >&laquo;</span>
+    </a>
+  </li>
+  <li class="page-item"><a class="page-link"  onClick="goPage(1,setPageSize)" >1</a></li>
+  `;
+  } else {
+    pagestr += `<li class="page-item">
+    <a class="page-link" aria-label="Previous" onClick="goPage(${
+      currentPage - 1
+    },setPageSize)">
+      <span aria-hidden="true" >&laquo;</span>
+    </a>
+  </li>
+  <li class="page-item"><a  class="page-link"  onClick="goPage(1,setPageSize)"> 1</a></li>
+  `;
+  }
+  //中間標籤
+  if (currentPage <= 4) {
+    if (totalPage <= 5) {
+      for (i = 2; i <= totalPage; i++) {
+        pagestr += `<li class="page-item"><a class="page-link" onClick="goPage(${i},setPageSize)">${i}</a></li>`;
+      }
+    } else if (totalPage > 5) {
+      for (i = 2; i <= 5; i++) {
+        pagestr += `<li class="page-item"><a class="page-link" onClick="goPage(${i},setPageSize)">${i}</a></li>`;
+      }
+      pagestr += `<li class="page-item"><a class="page-link"  onClick="goPage(${i},setPageSize)">...</a></li><li class="page-item"><a class="page-link" onClick="goPage(${totalPage},setPageSize)">${totalPage}</a></li>`;
+    }
+  } else if (currentPage < totalPage - 3) {
+    pagestr += `<li class="page-item"><a class="page-link">...</a></li>`;
+    if (totalPage <= currentPage + 2) {
+      for (i = currentPage - 1; i <= totalPage; i++) {
+        pagestr += `<li class="page-item"><a class="page-link" onClick="goPage(${i},setPageSize)">${i}</a></li>`;
+      }
+    } else if (totalPage > currentPage + 2) {
+      for (i = currentPage - 1; i <= currentPage + 1; i++) {
+        pagestr += `<li class="page-item"><a class="page-link" onClick="goPage(${i},setPageSize)">${i}</a></li>`;
+      }
+      pagestr += `<li class="page-item"><a class="page-link">...</a></li><li class="page-item"><a class="page-link" onClick="goPage(${totalPage},setPageSize)">${totalPage}</a></li>`;
+    }
+  } else if (currentPage >= totalPage - 3) {
+    pagestr += `<li class="page-item"><a class="page-link">...</a></li>`;
+
+    if (totalPage < currentPage) {
+      for (i = currentPage - 1; i <= totalPage; i++) {
+        pagestr += `<li class="page-item"><a class="page-link" onClick="goPage(${i},setPageSize)">${i}</a></li>`;
+      }
+    } else if (totalPage >= currentPage - 2) {
+      for (i = totalPage - 3; i <= totalPage; i++) {
+        pagestr += `<li class="page-item"><a class="page-link" onClick="goPage(${i},setPageSize)">${i}</a></li>`;
+      }
+    }
+  }
+
+  //下一頁的標籤
+
+  if (currentPage == totalPage) {
+    pagestr += `
+  <li class="page-item">
+  <a class="page-link" aria-label="Next"  >
+    <span aria-hidden="true">&raquo;</span>
+  </a>
+</li>`;
+  } else {
+    pagestr += `
+  <li class="page-item">
+  <a class="page-link" aria-label="Next" onClick="goPage(${
+    currentPage + 1
+  },setPageSize)" >
+    <span aria-hidden="true">&raquo;</span>
+  </a>
+</li>`;
+  }
+
+  pagination.innerHTML = pagestr;
+
+  for (i = 1; i <= totalPage; i++) {
+    if (pagination.children[i].children[0].text == currentPage) {
+      pagination.children[i].children[0].classList.add("active");
+      return;
+    }
+  }
+}

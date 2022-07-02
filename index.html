@@ -67,9 +67,7 @@
               name="crop"
             />
           </div>
-          <button type="button" class="search text-white btn mb-2 ms-2">
-            搜尋
-          </button>
+          <button type="button" class="search text-white btn mb-2">搜尋</button>
         </div>
         <div
           class="sort-content d-flex justify-content-md-between justify-content-center"
@@ -90,7 +88,7 @@
             <option data-price="交易量">依交易量排序</option>
           </select>
         </div>
-        <table class="market table me-4">
+        <table class="market table me-4 table_change table">
           <thead class="js-sort-advanced">
             <tr>
               <th width="15%">作物名稱</th>
@@ -195,6 +193,10 @@
             </tr>
           </tbody>
         </table>
+
+        <nav aria-label="Page navigation example ">
+          <ul class="pagination justify-content-center"></ul>
+        </nav>
       </div>
 
       <select
