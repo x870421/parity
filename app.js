@@ -1,4 +1,6 @@
 let data = [];
+const setPageSize = 20; //設定每頁顯示幾筆
+const pagination = document.querySelector(".pagination");
 
 //讀取數據
 function getData() {
@@ -15,6 +17,7 @@ function getData() {
     });
 }
 getData();
+goPage(1, setPageSize);
 
 //渲染畫面
 const showList = document.querySelector(".showList");
@@ -39,14 +42,17 @@ let type = "";
 const navbt = document.querySelector(".button-group");
 
 navbt.addEventListener("click", (e) => {
-  if (e.target.nodeName == "BUTTON") {
-    type = e.target.dataset.type;
+  if (e.target.nodeName !== "BUTTON") {
+    return;
   }
+
+  type = e.target.dataset.type;
 
   const faActive = document.querySelector(".fa-active");
   if (faActive !== null) {
     faActive.classList.remove("fa-active");
   }
+
   updateData();
   search();
 });
@@ -89,6 +95,8 @@ function search() {
     newData = newData.filter((item) => item["作物名稱"].match(cropInput.value));
   }
 
+  randerData(newData);
+
   if (newData.length == 0) {
     str = `<tr>
     <td colspan="7" class="text-center p-3">
@@ -96,11 +104,8 @@ function search() {
     </td>
   </tr>`;
     showList.innerHTML = str;
-
-    return;
+    pagination.children[1].children[0].classList.add("active");
   }
-
-  randerData(newData);
 }
 
 searchbt.addEventListener("click", () => {
@@ -109,6 +114,15 @@ searchbt.addEventListener("click", () => {
     return;
   }
   search();
+});
+
+//自動搜尋 (keyup電腦打字搜尋,enter手機換行搜尋)
+
+cropInput.addEventListener("keyup", (e) => {
+  if (e.keyCode == 13) {
+    updateData();
+    search();
+  }
 });
 
 //排序
@@ -146,6 +160,7 @@ sortAdvanced.addEventListener("click", (e) => {
   }
   //點擊字體有反應
   if (e.target.nodeName == "DIV") {
+    //點擊同一個價格種類
     if (sortPrice == e.target.textContent.trim()) {
       if (sortType == "up") {
         sortType = "down";
@@ -155,6 +170,7 @@ sortAdvanced.addEventListener("click", (e) => {
         sortType = "up";
       }
     } else {
+      //點擊不同價格種類
       e.target.children[0].children[0].classList.add("fa-active");
       sortPrice = e.target.textContent.trim();
       sortType = "up";
@@ -189,31 +205,7 @@ sortSelect.addEventListener("change", (e) => {
   randerData(newData);
 });
 
-//自動搜尋 (keyup電腦打字搜尋,enter手機換行搜尋)
-
-["keyup", "enter"].forEach((item) => {
-  cropInput.addEventListener(item, (e) => {
-    search();
-  });
-});
-
 //page
-
-const setPageSize = 20; //設定每頁顯示幾筆
-
-$(function () {
-  /*----產生data-th-----*/
-  let $table = $(".table_change");
-  let $thRows = $table.find("thead th");
-
-  $thRows.each(function (key, thRow) {
-    $table
-      .find("tbody tr td:nth-child(" + (key + 1) + ")")
-      .attr("data-th", $(thRow).text());
-  });
-  /*-----------*/
-  goPage(1, setPageSize); // 一開始先秀第一頁,以及每一頁最多兩筆資料
-});
 
 function goPage(currentPage, pageSize) {
   var tr = $(".table_change tbody tr");
@@ -237,7 +229,7 @@ function goPage(currentPage, pageSize) {
   //bootstrap分頁
 
   currentPage = parseInt(currentPage);
-  const pagination = document.querySelector(".pagination");
+
   //上一頁的標籤
 
   let pagestr = "";
@@ -320,7 +312,7 @@ function goPage(currentPage, pageSize) {
 
   pagination.innerHTML = pagestr;
 
-  for (i = 1; i <= totalPage; i++) {
+  for (i = 0; i <= totalPage; i++) {
     if (pagination.children[i].children[0].text == currentPage) {
       pagination.children[i].children[0].classList.add("active");
       return;
